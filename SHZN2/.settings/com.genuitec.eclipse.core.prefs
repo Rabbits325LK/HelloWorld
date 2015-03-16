@@ -1,0 +1,3 @@
+eclipse.preferences.version=1
+validator.Checked=WebRoot/WEB-INF/js/jquery.min.js,WebRoot/js/jquery.min.js,WebRoot/js/addons/datepicker.min.js,WebRoot/js/uikit.js,WebRoot/WEB-INF/js/uikit.js,WebRoot/js/jquery.mobile.custom.min.js,WebRoot/js/uikit.min.js,WebRoot/WEB-INF/js/addons/datepicker.min.js,WebRoot/WEB-INF/js/uikit.min.js
+validator.Unchecked=

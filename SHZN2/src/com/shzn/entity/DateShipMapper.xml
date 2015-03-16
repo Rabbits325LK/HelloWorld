@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"      
+ "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+<mapper namespace="com.shzn.dao.DateShipDao">
+	<!-- FindAll -->
+	<select id="findAll" resultType="com.shzn.entity.DateShip"
+		parameterType="int">
+		SELECT * FROM DATESHIP#{DATESHIP_SPECITIFEDDAY}
+	</select>
+
+	<!-- FindById -->
+	<select id="findByNames" resultType="com.shzn.entity.DateShip"
+		parameterType="map">
+		SELECT * FROM DATESHIP${specitifedDay} WHERE
+		DATESHIP_NAME=${dateShip_name}
+	</select>
+
+	<!-- update -->
+	<update id="update" parameterType="map">
+		UPDATE
+		DATESHIP${specitifedDay} SET
+		t1=${t1},t2=${t2},t3=${t3},t4=${t4},t5=${t5},t6=${t6},t7=${t7},t8=${t8},t9=${t9},t10=${t10},t11=${t11},t12=${t12},t13=${t13},t14=${t14},t15=${t15},t16=${t16},t17=${t17},t18=${t18},t19=${t19},t20=${t20},t21=${t21},t22=${t22},t23=${t23},t24=${t24}
+		where dateship_id=${dateship_id};
+	</update>
+
+	<!-- create -->
+	<!-- <update id="createDateShip" parameterType="int">
+		CREATE TABLE
+		dateShip#{spacifiedDayAfter}(
+		dateship_id INT PRIMARY KEY AUTO_INCREMENT,
+		dateship_name VARCHAR(30) not null,
+		t1 INT(1),
+		t2 INT(1),
+		t3 INT(1),
+		t4 INT(1),
+		t5 INT(1),
+		t6 INT(1),
+		t7 INT(1),
+		t8 INT(1),
+		t9 INT(1),
+		t10 INT(1),
+		t11 INT(1),
+		t12 INT(1),
+		t13 INT(1),
+		t14 INT(1),
+		t15 INT(1),
+		t16 INT(1),
+		t17 INT(1),
+		t18 INT(1),
+		t19 INT(1),
+		t20 INT(1),
+		t21 INT(1),
+		t22 INT(1),
+		t23 INT(1),
+		t24 INT(1)
+		)
+	</update> -->
+	<update id="createDateShip" parameterType="int">
+		CREATE TABLE DATESHIP#{spacifiedDayAfter} LIKE DATESHIP
+	</update>
+	
+	<!-- 实施更新 -->
+	<update id="updateDateship" parameterType="java.lang.Integer">
+		INSERT INTO DATESHIP#{specifiedDayAfter} (SELECT * FROM DATESHIP)
+	</update>
+	
+	<!-- 根据船名，日期搜索数据 -->
+	<select id="findByName" resultType="com.shzn.entity.DateShip" parameterType="com.shzn.entity.DateShip">
+		SELECT * FROM DATESHIP#{specitifedDay} WHERE DATESHIP_NAME=#{dateShip_name}
+	</select>
+</mapper>

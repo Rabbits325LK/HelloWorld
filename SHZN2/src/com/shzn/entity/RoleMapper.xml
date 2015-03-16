@@ -1,0 +1,97 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"      
+ "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+<mapper namespace="com.shzn.dao.RoleDao">
+	
+	<!-- findByPage -->
+	<select id="findByPage" parameterType="com.shzn.entity.page.RolePage" resultMap="roleMap">
+		SELECT * FROM ROLE_INFO ORDER BY ROLE_ID LIMIT #{begin},5
+	</select>
+	
+	<select id="findModuleByRoleId"
+		parameterType="int"
+		resultType="com.shzn.entity.Module">
+		SELECT * FROM MODULE_INFO
+		WHERE MODULE_ID IN (
+			SELECT MODULE_ID FROM ROLE_MODULE
+			WHERE ROLE_ID=#{role_id}
+		)
+	</select>
+	<resultMap id="roleMap" 
+		type="com.shzn.entity.Role">
+		<id column="role_id" property="role_id"/>
+		<collection property="modules"
+			javaType="arraylist" 
+			ofType="com.shzn.entity.Module"  
+		    column="role_id"
+		    select="findModuleByRoleId">
+		</collection>
+	</resultMap>
+	
+	<!-- findRows -->
+	<select id="findRows"
+		resultType="int">
+		SELECT COUNT(*) FROM ROLE_INFO
+	</select>
+	
+	<!-- findAllModules -->
+	<select id="findAllModules"
+		resultType="com.shzn.entity.Module">
+		SELECT * FROM MODULE_INFO ORDER BY MODULE_ID
+	</select>
+	
+	<!-- save -->
+	<!-- <insert id="save"
+		parameterType="com.shzn.entity.Role">
+		<selectKey keyProperty="role_id"
+			resultType="int"
+			order="BEFORE">
+			select role_seq.nextval from dual
+		</selectKey>
+		insert into role_info values(
+			#{role_id},
+			#{name}
+		)
+	</insert> -->
+	
+	<!-- saveRoleModule -->
+	<insert id="saveRoleModule"
+		parameterType="hashmap">
+		INSERT INTO ROLE_MODULE VALUES(
+			#{role_id},
+			#{module_id}
+		)
+	</insert>
+	
+	<!-- findById -->
+	<select id="findById"
+		parameterType="int"
+		resultMap="roleMap">
+		SELECT * FROM ROLE_INFO
+		WHERE ROLE_ID=#{id}
+	</select>
+	
+	<!-- update -->
+	<update id="update"
+		parameterType="com.shzn.entity.Role">
+		UPDATE ROLE_INFO SET
+		NAME=#{name}
+		WHERE ROLE_ID=#{role_id}
+	</update>
+	
+	<!-- deleteRoleModule -->
+	<delete id="deleteRoleModule"
+		parameterType="int">
+		DELETE FROM ROLE_MODULE
+		WHERE ROLE_ID=#{roleId}
+	</delete>
+	
+	
+</mapper>
+
+
+
+
+
+
+

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"      
+ "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+ <mapper namespace="com.shzn.dao.ImageDao">
+ <!-- findAll -->
+ <select id="findAll" resultType="com.shzn.entity.Image">
+ 	SELECT * FROM IMAGE_INFO ORDER BY IMG_ID
+ </select>
+ 
+ <!-- save -->
+ <insert id="save" parameterType="com.shzn.entity.Image">
+ 	INSERT INTO IMAGE_INFO(IMG_TYPE,IMG_SIZE,IMG_NAME,IMG_PATH) VALUES(#{img_type,jdbcType=VARCHAR},
+ 	#{img_size,jdbcType=VARCHAR},#{img_name,jdbcType=VARCHAR},#{img_path,jdbcType=VARCHAR})
+ </insert>
+ 
+ <!-- delete -->
+ <delete id="delete" parameterType="int">
+ 	DELETE FROM IMAGE_INFO WHERE IMG_ID=#{img_id}
+ </delete>
+ 
+ <!-- findByPath -->
+ <select id="findByPath" parameterType="int" resultType="com.shzn.entity.Image">
+ 	SELECT  * FROM IMAGE_INFO WHERE IMG_ID=#{img_id}
+ </select>
+ 
+ <!-- findRows -->
+ <select id="findRows" resultType="int">
+ 	SELECT COUNT(*) FROM IMAGE_INFO
+ </select>
+ 
+ <!-- findByPath -->
+ <select id="findByPage" parameterType="com.shzn.entity.page.ImagePage" resultType="com.shzn.entity.Image">
+ 	SELECT * FROM IMAGE_INFO ORDER BY IMG_ID LIMIT #{begin},5
+ </select>
+ 
+ </mapper>

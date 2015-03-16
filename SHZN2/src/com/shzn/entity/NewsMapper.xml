@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"      
+ "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+<mapper namespace="com.shzn.dao.NewsDao">
+<!-- findByPage -->
+<select id="findByPage" parameterType="com.shzn.entity.page.NewsPage" resultType="com.shzn.entity.News">
+	SELECT * FROM NEWS ORDER BY NEWS_ID LIMIT #{begin},5
+</select>
+
+<!-- findRows -->
+<select id="findRows" resultType="int">
+	SELECT COUNT(*) FROM NEWS
+</select>
+
+<!-- save -->
+<insert id="save" parameterType="com.shzn.entity.News">
+	INSERT INTO NEWS(NEWS_TITLE,NEWS_TEXT,NEWS_IMG) VALUES(#{news_title,jdbcType=VARCHAR},
+	#{news_text,jdbcType=VARCHAR},#{news_img,jdbcType=VARCHAR})
+</insert>
+
+<!-- delete -->
+<delete id="delete" parameterType="int">
+	DELETE FROM NEWS WHERE NEWS_ID=#{news_id}
+</delete>
+
+<!-- findById -->
+<select id="findById" parameterType="int" resultType="com.shzn.entity.News">
+	SELECT * FROM NEWS WHERE NEWS_ID=#{news_id}
+</select>
+</mapper>

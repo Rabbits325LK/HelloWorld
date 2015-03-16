@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"      
+ "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+<mapper namespace="com.shzn.dao.SHZN_AdminDao">
+
+	<resultMap id="adminMap" type="com.shzn.entity.SHZN_Admin">
+		<id column="admin_id" property="admin_id" />
+		<collection property="roles" javaType="arraylist"
+			ofType="com.shzn.entity.Role" column="admin_id" select="findRoleByAdminId">
+		</collection>
+	</resultMap>
+	<!-- findByPage -->
+	<select id="findByPage" parameterType="com.shzn.entity.page.SHZN_AdminPage"
+		resultMap="adminMap">
+		
+		SELECT * FROM ADMIN_INFO
+		WHERE ADMIN_ID IN (
+		SELECT AI.ADMIN_ID
+		FROM ADMIN_INFO AI
+		LEFT JOIN ADMIN_ROLE AR
+		ON AI.ADMIN_ID=AR.ADMIN_ID
+		LEFT JOIN ROLE_INFO RI
+		ON AR.ROLE_ID=RI.ROLE_ID
+		LEFT JOIN ROLE_MODULE RM
+		ON RI.ROLE_ID=RM.ROLE_ID
+		LEFT JOIN MODULE_INFO MI
+		ON RM.MODULE_ID=MI.MODULE_ID
+		<where>
+			<if test="moduleId != null &amp;&amp; moduleId != -1">
+				AND MI.MODULE_ID=#{moduleId}
+			</if>
+			<if test="roleName != null &amp;&amp; roleName.length()>0">
+				AND RI.NAME LIKE '%'||#{roleName}||'%'
+			</if>
+		</where>
+		)
+		ORDER BY ADMIN_ID LIMIT #{begin},5
+	</select>
+
+	<!-- FindRoleByAdminId -->
+	<select id="findRoleByAdminId" parameterType="int"
+		resultType="com.shzn.entity.Role">
+		SELECT * FROM ROLE_INFO
+		WHERE ROLE_ID IN (
+		SELECT ROLE_ID FROM ADMIN_ROLE
+		WHERE ADMIN_ID=#{admin_id}
+		)
+	</select>
+
+
+	<!-- findRows -->
+	<select id="findRows" parameterType="com.shzn.entity.page.SHZN_AdminPage"
+		resultType="int">
+		SELECT COUNT(*) FROM ADMIN_INFO
+		WHERE ADMIN_ID IN (
+		SELECT AI.ADMIN_ID
+		FROM ADMIN_INFO AI
+		LEFT JOIN ADMIN_ROLE AR
+		ON AI.ADMIN_ID=AR.ADMIN_ID
+		LEFT JOIN ROLE_INFO RI
+		ON AR.ROLE_ID=RI.ROLE_ID
+		LEFT JOIN ROLE_MODULE RM
+		ON RI.ROLE_ID=RM.ROLE_ID
+		LEFT JOIN MODULE_INFO MI
+		ON RM.MODULE_ID=MI.MODULE_ID
+		<where>
+			<if test="moduleId != null &amp;&amp; moduleId != -1">
+				AND MI.MODULE_ID=#{moduleId}
+			</if>
+			<if test="roleName != null &amp;&amp; roleName.length()>0">
+				AND RI.NAME LIKE '%'||#{roleName}||'%'
+			</if>
+		</where>
+		)
+	</select>
+
+	<!-- updatePassword -->
+	<update id="updatePassword" parameterType="hashmap">
+		UPDATE ADMIN_INFO SET PASSWORD=#{password}
+		WHERE ADMIN_ID IN
+		<foreach collection="ids" open="(" close=")" separator=","
+			item="id">
+			#{id}
+		</foreach>
+	</update>
+
+	<!-- findByCode -->
+	<select id="findByCode" parameterType="String"
+		resultType="com.shzn.entity.SHZN_Admin">
+		SELECT * FROM ADMIN_INFO
+		WHERE ADMIN_CODE=#{adminCode}
+	</select>
+
+	<!-- findModulesByAdmin -->
+	<select id="findModulesByAdmin" parameterType="int"
+		resultType="com.shzn.entity.Module">
+		SELECT * FROM MODULE_INFO WHERE MODULE_ID IN (
+		SELECT MI.MODULE_ID FROM MODULE_INFO MI
+		INNER JOIN ROLE_MODULE RM
+		ON RM.MODULE_ID=MI.MODULE_ID
+		INNER JOIN ROLE_INFO RI
+		ON RI.ROLE_ID=RM.ROLE_ID
+		INNER JOIN ADMIN_ROLE AR
+		ON AR.ROLE_ID=RI.ROLE_ID
+		INNER JOIN ADMIN_INFO AI
+		ON AI.ADMIN_ID=AR.ADMIN_ID
+		WHERE AI.ADMIN_ID=#{adminId}
+		) ORDER BY MODULE_ID
+	</select>
+	
+	<!-- Save -->
+	<insert id="save" parameterType="com.shzn.entity.SHZN_Admin">
+		INSERT INTO ADMIN_INFO(ADMIN_CODE,PASSWORD,NAME,TELEPHONE,EMAIL,QQ,ADDRESS,GENDER,ENROLLDATE) VALUES(#{admin_code,jdbcType=VARCHAR},
+		#{password,jdbcType=VARCHAR},#{name,jdbcType=VARCHAR},#{telephone,jdbcType=VARCHAR},
+		#{email,jdbcType=VARCHAR},#{qq,jdbcType=VARCHAR},#{address,jdbcType=VARCHAR},
+		#{gender,jdbcType=INTEGER},NOW())
+	</insert>
+	
+	<!-- findByNameforId -->
+	<select id="findByNameForId" parameterType="String" resultType="int">
+		SELECT ADMIN_ID FROM ADMIN_INFO <where>ADMIN_CODE='${_parameter}'</where> 
+	</select>
+	
+	<!-- savePTHY -->
+	<insert id="savePTHY" parameterType="int">
+		INSERT INTO ADMIN_ROLE VALUES(#{admin_id},200)
+	</insert>
+	
+	<!-- findByPageAdmin -->
+	<select id="findByPageAdmin" parameterType="com.shzn.entity.page.SHZN_AdminPage" resultType="com.shzn.entity.SHZN_Admin">
+		SELECT * FROM ADMIN_INFO ORDER BY ADMIN_ID LIMIT #{begin},5
+	</select>
+	
+	<!-- findRow -->
+	<select id="findRow" resultType="int">
+		SELECT COUNT(*) FROM ADMIN_INFO
+	</select>
+	
+	<!-- delete -->
+	<delete id="delete" parameterType="int">
+		DELETE FROM ADMIN_INFO WHERE ADMIN_ID=#{admin_id}
+	</delete>
+	
+	<!-- findadminByrole -->
+	<select id="findadminByrole" parameterType="int" resultType="Integer">
+		SELECT ROLE_ID FROM ADMIN_ROLE WHERE ADMIN_ID=#{admin_id} ORDER BY ROLE_ID 
+	</select>
+	
+	<!-- saveadminrole -->
+	<insert id="saveadminroleA" parameterType="int">
+		INSERT INTO ADMIN_ROLE VALUES(#{admin_id},100)
+	</insert>
+	
+	<!-- saveadminroleB -->
+	<insert id="saveadminroleB" parameterType="int">
+		INSERT INTO ADMIN_ROLE VALUES(#{admin_id},200)
+	</insert>
+	
+	<!-- saveadminrole -->
+	<insert id="saveadminroleC" parameterType="int">
+		INSERT INTO ADMIN_ROLE VALUES(#{admin_id},300)
+	</insert>
+	
+	<!-- findByAdminId -->
+	<select id="findByAdminID" parameterType="int" resultType="com.shzn.entity.SHZN_Admin">
+		SELECT * FROM ADMIN_INFO WHERE ADMIN_ID=#{admin_id}
+	</select>
+	
+	<!-- updateAdminXI -->
+	<update id="updateAdminXI" parameterType="com.shzn.entity.SHZN_Admin">
+		UPDATE ADMIN_INFO SET NAME=#{name,jdbcType=VARCHAR},TELEPHONE=#{telephone,jdbcType=VARCHAR},
+		EMAIL=#{email,jdbcType=VARCHAR},QQ=#{qq,jdbcType=VARCHAR},ADDRESS=#{address,jdbcType=VARCHAR},
+		GENDER=#{gender,jdbcType=INTEGER} WHERE ADMIN_ID=#{admin_id}
+	</update>
+	
+	<!-- updateAdminPwd -->
+	<update id="updateAdminPwd" parameterType="com.shzn.entity.SHZN_Admin">
+		UPDATE ADMIN_INFO SET PASSWORD=#{password,jdbcType=VARCHAR} WHERE ADMIN_ID=#{admin_id}
+	</update>
+</mapper>
