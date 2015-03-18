@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"      
+ "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+ <mapper namespace="com.shzn.dao.ShipODao">
+ 	<!-- findAll -->
+ 	<select id="findAll" resultType="com.shzn.entity.ShipO">
+ 		SELECT * FROM SHIP_OPERATION ORDER BY SHIP_ID
+ 	</select>
+ 	
+ 	<!-- findRows -->
+ 	<select id="findRows" resultType="int">
+ 		SELECT COUNT(*) FROM SHIP_OPERATION
+ 	</select>
+ 	
+ 	<!-- save -->
+ 	<insert id="save" parameterType="com.shzn.entity.ShipO">
+ 		INSERT INTO SHIP_OPERATION(SHIP_NAME,STARTIME,SHIP_ROLE,ADMIN_NAME) VALUES (
+ 		#{ship_name,jdbcType=VARCHAR},DATE_SUB(curdate(),INTERVAL -#{timenum,jdbcType=INTEGER} day),
+ 		#{ship_role,jdbcType=INTEGER},#{Admin_name,jdbcType=VARCHAR})
+ 	</insert>
+ 	
+ 	<!-- findByPage -->
+ 	<select id="findByPage" parameterType="com.shzn.entity.page.ShipOPage"
+ 		resultType="com.shzn.entity.ShipO">
+ 	<![CDATA[
+ 		SELECT * FROM SHIP_OPERATION ORDER BY SHIP_ID LIMIT #{begin},5
+ 	]]>
+ 	</select>
+ 	
+ 	<!-- unfindByName -->
+ 	<select id="unfindByName" parameterType="String" resultType="com.shzn.entity.ShipO">
+ 		SELECT * FROM SHIP_OPERATION WHERE ADMIN_NAME=#{Admin_name,jdbcType=VARCHAR} AND SHIP_ROLE=1
+ 	</select>
+ 	
+ 	<!-- ufindByName -->
+ 	<select id="ufindByName" parameterType="String" resultType="com.shzn.entity.ShipO">
+ 		SELECT * FROM SHIP_OPERATION WHERE ADMIN_NAME=#{Admin_name,jdbcType=VARCHAR} AND SHIP_ROLE=2
+ 	</select>
+ 	
+ 	<!-- updateRoleforPass -->
+ 	<update id="updateforRolePass" parameterType="int">
+ 		UPDATE SHIP_OPERATION SET SHIP_ROLE=2 WHERE SHIP_ID=#{ship_id}
+ 	</update>
+ 	
+ 	<!-- Delete -->
+ 	<delete id="delete" parameterType="int">
+ 		DELETE FROM SHIP_OPERATION WHERE SHIP_ID=#{ship_id}
+ 	</delete>
+ </mapper>

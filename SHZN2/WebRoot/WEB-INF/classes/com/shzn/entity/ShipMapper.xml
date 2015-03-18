@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"      
+ "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+<mapper namespace="com.shzn.dao.ShipDao">
+<!-- findAll -->
+<select id="findAll" resultType="com.shzn.entity.Ship">
+	SELECT * FROM SHIP ORDER BY SHIP_ID
+</select>
+
+<!-- findRows -->
+<select id="findRows" resultType="int">
+	SELECT COUNT(*) FROM SHIP	
+</select>
+
+<!-- save -->
+<insert id="save" parameterType="com.shzn.entity.Ship">
+	INSERT INTO SHIP(SHIP_NAME,SHIP_SIZE,SHIP_TYPE,SHIP_IMG,SHIP_CAPACITY) VALUES(#{ship_name,jdbcType=VARCHAR},
+	#{ship_size,jdbcType=VARCHAR},#{ship_type,jdbcType=VARCHAR},
+	#{ship_img,jdbcType=VARCHAR},#{ship_Capacity,jdbcType=VARCHAR})
+</insert>
+
+<!-- Update -->
+<update id="update" parameterType="com.shzn.entity.Ship">
+	UPDATE SHIP SET SHIP_NAME=#{ship_name,jdbcType=VARCHAR},
+	SHIP_SIZE=#{ship_size,jdbcType=VARCHAR},
+	SHIP_TYPE=#{ship_type,jdbcType=VARCHAR},
+	SHIP_IMG=#{ship_img,jdbcType=VARCHAR},
+	SHIP_CAPACITY=#{ship_Capacity,jdbcType=VARCHAR} WHERE SHIP_ID=#{ship_id}
+</update>
+
+<!-- findByPage -->
+<select id="findByPage" parameterType="com.shzn.entity.page.ShipPage"
+	resultType="com.shzn.entity.Ship">
+	<![CDATA[
+		SELECT * FROM SHIP ORDER BY SHIP_ID LIMIT #{begin},5
+	]]>
+</select>
+
+<!-- findById -->
+<select id="findById" parameterType="int" resultType="com.shzn.entity.Ship">
+	SELECT * FROM SHIP WHERE SHIP_ID=#{ship_id}
+</select>
+
+<!-- Delete -->
+<select id="delete" parameterType="int">
+	DELETE FROM SHIP WHERE SHIP_ID=#{ship_id}
+</select>
+</mapper>
